@@ -2,11 +2,20 @@
 
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import React from 'react'
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react'
 
 export default function page() {
 
+    //hooks
     const {data: session} = useSession();
+    const router = useRouter();
+
+    //states
+    const [prompt, setPrompt] = useState("");
+    const [tag, setTag] = useState("");
+
+
 
     const createPrompt = async (e) => {
         e.preventDefault();
@@ -21,13 +30,15 @@ export default function page() {
         const res = await fetch("/api/prompt/new",{
             method: "POST",
             body: JSON.stringify({
-              text: "post.prompt",
+              text: prompt,
               userId: session?.user.id,
-              tag: "post.tag",
+              tag: tag,
             }),
           })
-
+ 
         console.log(res);
+        
+        res.ok && router.push('/')
     }
 
     return (
@@ -50,8 +61,8 @@ export default function page() {
                     </span>
 
                     <textarea
-                        // value={post.prompt}
-                        // onChange={(e) => setPost({ ...post, prompt: e.target.value })}
+                        value={prompt}
+                        onChange={(e)=> setPrompt(e.target.value)}
                         placeholder='Write your post here'
                         required
                         className='form_textarea '
@@ -66,8 +77,8 @@ export default function page() {
                         </span>
                     </span>
                     <input
-                        // value={post.tag}
-                        // onChange={(e) => setPost({ ...post, tag: e.target.value })}
+                        value={tag}
+                        onChange={(e)=>setTag(e.target.value)}
                         type='text'
                         placeholder='#Tag'
                         required
