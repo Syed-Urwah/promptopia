@@ -14,7 +14,7 @@ export default function Home() {
       discover, create and share creative prompts
     </p>
 
-    <Feed />
+    {/* <Feed /> */}
   </section>
   )
 }
